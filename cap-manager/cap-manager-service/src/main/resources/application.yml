@@ -1,0 +1,30 @@
+#FTP\u76F8\u5173\u914D\u7F6E
+#FTP\u7684ip\u5730\u5740
+FTP:
+  ADDRESS: 192.168.0.168
+  PORT: 21
+  USERNAME: user
+  PASSWORD: user
+  BASE:
+    PATH: /home/ftpuser/www/images
+#\u56FE\u7247\u670D\u52A1\u5668\u7684\u76F8\u5173\u914D\u7F6E
+#\u56FE\u7247\u670D\u52A1\u5668\u7684\u57FA\u7840url
+IMAGE:
+  BASE:
+    URL: http://192.168.0.168/images
+
+#\u670D\u52A1\u5C42\u57FA\u7840url
+REST:
+  BASE:
+    URL: http://192.168.0.168:8080/rest
+  CONTENT:
+    SYNC:
+      URL: /cache/sync/content/
+
+
+#pagehelper分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count

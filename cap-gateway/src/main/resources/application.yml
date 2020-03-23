@@ -1,0 +1,38 @@
+server:
+  port: 9201
+# 自定义url
+service-url:
+  user-service: http://localhost:8763
+spring:
+  application:
+    name: cap-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.0.168:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      routes:
+        # - id: haha #路由的ID
+        #   uri: ${service-url.user-service}/username #匹配后路由地址
+        #   uri: http://www.baidu.com #匹配后路由地址
+        #   predicates: # 断言，路径相匹配的进行路由
+        #     - Path=/username
+        - id: provider_route
+          uri: lb://provider
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/username
+        - id: consumer_route
+          uri: lb://consumer
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/consumer/hi/**
+          # StripPrefix 跳过Path的层级数，如StripPrefix=1时，上述path最终得到的重定向路由为/hi/**
+          filters:
+            - StripPrefix=1
+
+
+
+
