@@ -15,49 +15,53 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/item")
 public class ItemController {
 
-	@Autowired
-	private ItemService itemService;
-	//取商品基本信息
-	@RequestMapping("/info/{itemId}")
-	@ResponseBody
-	public ResponseResult getItemBaseInfo(@PathVariable Long itemId) {
-		ResponseResult result = itemService.getItemBaseInfo(itemId);
-		return result;
-	}
-	//取商品详细信息
-	@RequestMapping("/desc/{itemId}")
-	@ResponseBody
-	public ResponseResult getItemDesc(@PathVariable Long itemId) {
-		ResponseResult result = itemService.getItemDesc(itemId);
-		return result;
-	}
-	//取商品规格信息
-	@RequestMapping("/param/{itemId}")
-	@ResponseBody
-	public ResponseResult getItemParam(@PathVariable Long itemId) {
-		ResponseResult result = itemService.getItemParam(itemId);
-		return result;
-	}
-	//取商品竞标表
-	@RequestMapping("/record/{itemId}")
-	@ResponseBody
-	public ResponseResult getItemRecord(@PathVariable Long itemId) {
-		ResponseResult result = itemService.getItemRecord(itemId);
-		return  result;
-	}
-	//取过期商品
-	@RequestMapping("/overtime")
-	@ResponseBody
-	public ResponseResult getOvertimeItem() {
-		ResponseResult result = itemService.getOvertimeItem();
-		return  result;
-	}
+    @Autowired
+    private ItemService itemService;
+
+    //取商品基本信息
+    @RequestMapping("/info/{itemId}")
+    @ResponseBody
+    public ResponseResult getItemBaseInfo(@PathVariable Long itemId) {
+        ResponseResult result = itemService.getItemBaseInfo(itemId);
+        return result;
+    }
+
+    //取商品详细信息
+    @RequestMapping("/desc/{itemId}")
+    @ResponseBody
+    public ResponseResult getItemDesc(@PathVariable Long itemId) {
+        ResponseResult result = itemService.getItemDesc(itemId);
+        return result;
+    }
+
+    //取商品规格信息
+    @RequestMapping("/param/{itemId}")
+    @ResponseBody
+    public ResponseResult getItemParam(@PathVariable Long itemId) {
+        ResponseResult result = itemService.getItemParam(itemId);
+        return result;
+    }
+
     @RequestMapping("/list")
     @ResponseBody
     public ResponseResult getItemList() {
         ResponseResult result = itemService.getItemList();
-        return  result;
+        return result;
     }
 
+//	//取商品竞标表
+//	@RequestMapping("/record/{itemId}")
+//	@ResponseBody
+//	public ResponseResult getItemRecord(@PathVariable Long itemId) {
+//		ResponseResult result = itemService.getItemRecord(itemId);
+//		return  result;
+//	}
+//	//取过期商品
+//	@RequestMapping("/overtime")
+//	@ResponseBody
+//	public ResponseResult getOvertimeItem() {
+//		ResponseResult result = itemService.getOvertimeItem();
+//		return  result;
+//	}
 
 }
