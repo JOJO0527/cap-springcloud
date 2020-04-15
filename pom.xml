@@ -27,6 +27,8 @@
         <module>cap-securityOAuth2</module>
         <module>cap-mqprovider</module>
         <module>cap-mqconsumer</module>
+        <module>cap-portal</module>
+        <module>cap-portal1</module>
     </modules>
 
     <properties>
