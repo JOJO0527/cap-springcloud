@@ -1,0 +1,67 @@
+server:
+  port: 6001
+spring:
+  application:
+    name: authentication-server
+###############################
+###     database setting    ###
+###############################
+  datasource:
+    url: jdbc:mysql://192.168.0.168:3306/cap_springcloud?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # Spring Boot 2.0 之后默认使用 hikari 作为数据库连接池。
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 9
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: cn.kilog.cap.auth.config.MySQL5TableType
+  redis:
+    host: 192.168.0.168
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: 1ms
+        min-idle: 0
+###############################
+###   spring cloud setting  ###
+###############################
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.0.168:8848
+    sentinel:
+      transport:
+        port: 8719
+        # sentinel流量监控台 不知道为什么docker上的监控不到本地应用
+        # 可能需要监控台跟应用在同一台机器上？
+        dashboard: 127.0.0.1:8080
+###############################
+### spring security setting ###
+###############################
+management:
+  endpoint:
+    health:
+      enabled: true
+
+# JWT
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 604800
+  tokenHead: "Bearer "
+  route:
+    authentication:
+      path: auth
+      refresh: refresh
+      register: "auth/register"
