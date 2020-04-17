@@ -1,8 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "service-url.user-service",
-      "type": "java.lang.String",
-      "description": "Description for service-url.user-service."
-    }
-  ] }
