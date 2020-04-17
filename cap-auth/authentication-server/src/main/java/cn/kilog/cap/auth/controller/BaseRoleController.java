@@ -29,6 +29,7 @@ public class BaseRoleController{
 //    @Autowired
 //    private BaseRoleModuleService baseRoleModuleService;
 
+    @GetMapping("role/{userId}")
     public ResponseData<List<BaseRole>> getRoleByUserId(@PathVariable("userId") String userId) {
         logger.debug("根据用户查询角色");
         List<BaseRole> list;
@@ -42,19 +43,19 @@ public class BaseRoleController{
         return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), list);
     }
 
-//    @GetMapping("/role")
-//    public ResponseData<List<BaseRole>> getAllRole() {
-//        logger.debug("获取所有角色");
-//        List<BaseRole> list;
-//        try {
-////            list = baseRoleService.selectAll();
-//        }catch (Exception e){
-//            logger.error("获取所有角色失败");
-//            e.printStackTrace();
-//            return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
-//        }
-//        return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), list);
-//    }
+    @GetMapping("/role")
+    public ResponseData<List<BaseRole>> getAllRole() {
+        logger.debug("获取所有角色");
+        List<BaseRole> list;
+        try {
+            list = baseRoleService.selectAll();
+        }catch (Exception e){
+            logger.error("获取所有角色失败");
+            e.printStackTrace();
+            return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+        }
+        return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), list);
+    }
 /*
     @PostMapping("/role/table")
     protected ResponseData<TableData<BaseRole>> queryRecord(@RequestBody BaseRoleRequest query) {
