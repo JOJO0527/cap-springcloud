@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.channels.Pipe;
 
 @RestController
 @RequestMapping("cart")
@@ -34,5 +35,22 @@ public class CartController {
         if (StringUtils.isEmpty(userId))
             userId = "095f95adc9834328a4edbe4b70a731c8";
         return cartService.getCartList(userId);
+    }
+
+    @DeleteMapping("{itemId}")
+    public ResponseResult delCart(HttpServletRequest request, HttpServletResponse response,
+                                  @PathVariable("itemId") Long itemId){
+        String userId = request.getHeader("userId");
+        if (StringUtils.isEmpty(userId))
+            userId = "095f95adc9834328a4edbe4b70a731c8";
+        return cartService.delCart(userId,itemId);
+    }
+
+    @DeleteMapping("list")
+    public ResponseResult clearCart(HttpServletRequest request, HttpServletResponse response){
+        String userId = request.getHeader("userId");
+        if (StringUtils.isEmpty(userId))
+            userId = "095f95adc9834328a4edbe4b70a731c8";
+        return cartService.clearCart(userId);
     }
 }
