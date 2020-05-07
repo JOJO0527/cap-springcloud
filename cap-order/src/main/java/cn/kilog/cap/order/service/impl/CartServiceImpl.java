@@ -3,30 +3,35 @@ package cn.kilog.cap.order.service.impl;
 import cn.kilog.cap.common.pojo.ResponseResult;
 import cn.kilog.cap.common.utils.JsonUtils;
 import cn.kilog.cap.manager.pojo.CapItem;
+import cn.kilog.cap.order.model.CartItem;
 import cn.kilog.cap.order.service.CartService;
 import cn.kilog.cap.rest.client.provider.RestService;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.nacos.client.utils.JSONUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
 @Service
 @Slf4j
 public class CartServiceImpl implements CartService {
-    @Autowired
+
     private StringRedisTemplate stringRedisTemplate;
-    @Autowired
     private RestService restService;
+
+    @Autowired
+    public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
+
+    @Autowired
+    public void setRestService(RestService restService) {
+        this.restService = restService;
+    }
 
     @Value("${REDIS_CART_PRE}")
     private String REDIS_CART_PRE;
@@ -73,11 +78,14 @@ public class CartServiceImpl implements CartService {
         HashOperations<String, String, String> ops = stringRedisTemplate.opsForHash();
         Map<String, String> entries = ops.entries(REDIS_CART_PRE + ":" + userId);
         if (entries.isEmpty()) return null;
-        Set<Map.Entry<String, String>> set = entries.entrySet();
-        ArrayList<String> list = new ArrayList<>();
-        set.forEach(x -> list.add(x.getKey()));
+        Set<Map.Entry<String/* itemId */, String/* number */>> set = entries.entrySet();
+        // 商品 list
         ArrayList<CapItem> capItemArrayList = new ArrayList<>();
-        list.forEach(x -> capItemArrayList.add((CapItem) ResponseResult.formatToPojo(restService.getItemBaseInfo(Long.parseLong(x)), CapItem.class).getData()));
+        set.forEach(x -> {
+            CapItem data = (CapItem) ResponseResult.formatToPojo(restService.getItemBaseInfo(Long.parseLong(x.getKey())), CapItem.class).getData();
+            data.setNum(Integer.valueOf(x.getValue()));
+            capItemArrayList.add(data);
+        });
         return capItemArrayList;
     }
 
@@ -101,5 +109,23 @@ public class CartServiceImpl implements CartService {
         return ResponseResult.ok();
     }
 
+    @Override
+    public ResponseResult getCartListByids(String userId, List<CartItem> list) {
+        HashOperations<String, String, String> opsForHash = stringRedisTemplate.opsForHash();
+        ArrayList<CapItem> items = new ArrayList<>();
+        for (CartItem item : list) {
+            Long itemId = item.getId();
+            String num = opsForHash.get(REDIS_CART_PRE + ":" + userId, String.valueOf(itemId));
+
+            // remote fetching the itemInfo
+            String itemBaseInfo = restService.getItemBaseInfo(itemId);
+            ResponseResult responseResult = ResponseResult.formatToPojo(itemBaseInfo, CapItem.class);
+            CapItem capItem = (CapItem) responseResult.getData();
+            if (!StringUtils.isEmpty(num))
+            capItem.setNum(Integer.valueOf(num));
+            items.add(capItem);
+        }
+        return ResponseResult.ok(items);
+    }
 
 }
